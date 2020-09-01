@@ -110,8 +110,8 @@
         </member>
 		<member name="%Not">
 		            <summary>
-                !x
-            </summary>
+                  Reverses the result, returns false if the result is true
+                </summary>
             <param name="x">x value.</param>
             <search>not</search>
         </member>
