@@ -229,5 +229,15 @@ namespace Dynamo.ViewModels
         {
             return true;
         }
+
+        private void UnpinFromNode(object parameters)
+        {
+        }
+
+        private bool CanUnpinFromNode(object parameters)
+        {
+            return true;
+        }
+
     }
 }

@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using Dynamo.Graph.Nodes;
+using Dynamo.Selection;
 using Dynamo.Utilities;
 
 namespace Dynamo.Graph.Notes
@@ -9,8 +13,9 @@ namespace Dynamo.Graph.Notes
     /// </summary>
     public class NoteModel : ModelBase
     {
+        private int DISTANCE_TO_PINNED_NODE = 24;
+
         private string text;
-      
         /// <summary>
         /// Returns the text inside the note.
         /// </summary>
@@ -21,6 +26,17 @@ namespace Dynamo.Graph.Notes
             {
                 text = value;
                 RaisePropertyChanged("Text");
+            }
+        }
+
+        private NodeModel pinNode;
+        public NodeModel PinNode
+        {
+            get { return pinNode; }
+            set
+            {
+                pinNode = value;
+                RaisePropertyChanged("PinNode");
             }
         }
 
@@ -37,6 +53,12 @@ namespace Dynamo.Graph.Notes
             Y = y;
             Text = text;
             GUID = guid;
+        }
+
+        public void MoveOnTopOfNode(NodeModel nodeTopin)
+        {
+            CenterX = nodeTopin.CenterX;
+            CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
         }
 
         #region Command Framework Supporting Methods
