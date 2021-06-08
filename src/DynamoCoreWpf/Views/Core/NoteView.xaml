@@ -78,6 +78,8 @@
             FontFamily="Trebuchet" 
             FontSize="12" 
             Foreground="#222"
+            AcceptsReturn="True"
+            TextChanged="noteText_TextChanged"
             Padding="10" TextWrapping="Wrap" >
         </TextBox>
     </Grid>

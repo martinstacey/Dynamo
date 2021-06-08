@@ -147,5 +147,17 @@ namespace Dynamo.Nodes
         {
             noteText.IsEnabled = false;
         }
+
+        private void noteText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var nodeText = sender as TextBox;
+            if (nodeText.Text.Contains("\n-"))
+            {
+                int caretPreviousIndex = nodeText.CaretIndex;
+                string bullet = "  \u2022  ";
+                nodeText.Text = nodeText.Text.Replace("\n-", bullet);
+                nodeText.CaretIndex = caretPreviousIndex + bullet.Length;
+            }
+        }
     }
 }
