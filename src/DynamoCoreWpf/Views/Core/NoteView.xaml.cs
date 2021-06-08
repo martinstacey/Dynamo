@@ -31,6 +31,8 @@ namespace Dynamo.Nodes
 
             Loaded += OnNoteViewLoaded;
             Unloaded += OnNoteViewUnloaded;
+
+            noteText.IsEnabled = false;
         }
 
         void OnNoteViewLoaded(object sender, RoutedEventArgs e)
@@ -84,20 +86,8 @@ namespace Dynamo.Nodes
 
         private void OnEditItemClick(object sender, RoutedEventArgs e)
         {
-            // Setup a binding with the edit window's text field
-            var dynamoViewModel = ViewModel.WorkspaceViewModel.DynamoViewModel;
-            var editWindow = new EditWindow(dynamoViewModel, true)
-            {
-                Title = Dynamo.Wpf.Properties.Resources.EditNoteWindowTitle
-            };
-            editWindow.BindToProperty(DataContext, new Binding("Text")
-            {
-                Mode = BindingMode.TwoWay,
-                Source = (DataContext as NoteViewModel),
-                UpdateSourceTrigger = UpdateSourceTrigger.Explicit
-            });
+            noteText.IsEnabled = true;
 
-            editWindow.ShowDialog();
         }
 
         private void OnDeleteItemClick(object sender, RoutedEventArgs e)
@@ -152,5 +142,10 @@ namespace Dynamo.Nodes
                 child.ViewModel.ZIndex = Configurations.NodeStartZIndex;
             }
         }
-   }
+
+        private void noteText_LostFocus(object sender, RoutedEventArgs e)
+        {
+            noteText.IsEnabled = false;
+        }
+    }
 }

@@ -34,7 +34,7 @@
 
         <TextBlock
           Foreground="White"
-          Text="{Binding Path=Text, Mode=OneWay}"
+          Text=""
           Grid.Column="0" Grid.Row="0" FontFamily="Trebuchet" 
             FontSize="12" 
             Padding="10" TextWrapping="Wrap">
@@ -67,15 +67,18 @@
         </TextBlock.Effect>
             
         </TextBlock>
-        
-        <TextBlock 
+
+        <TextBox 
             Name="noteText"
+            Background="White"
+            BorderThickness="0"
+            LostFocus="noteText_LostFocus"
             Grid.Column="0" Grid.Row="0"
-            Text="{Binding Path=Text, Mode=OneWay}" 
+            Text="{Binding Path=Text, Mode=TwoWay}" 
             FontFamily="Trebuchet" 
             FontSize="12" 
             Foreground="#222"
             Padding="10" TextWrapping="Wrap" >
-        </TextBlock>
+        </TextBox>
     </Grid>
 </UserControl>
