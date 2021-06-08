@@ -219,5 +219,15 @@ namespace Dynamo.ViewModels
             }
             return false;
         }
+
+        private void PinToNode(object parameters)
+        {
+
+        }
+
+        private bool CanPinToNode(object parameters)
+        {
+            return true;
+        }
     }
 }

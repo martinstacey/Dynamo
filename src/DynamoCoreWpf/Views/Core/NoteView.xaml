@@ -27,6 +27,10 @@
                 <MenuItem Name="unGroup_cm"
                           Header="{x:Static p:Resources.ContextUnGroupFromSelection}"
                           Command="{Binding Path=UngroupCommand}" />
+                <MenuItem Name="pinToNode"
+                          Header="{x:Static p:Resources.ContextPinToNode}" 
+                          Command="{Binding Path=PinToNodeCommand}"/>
+
             </ContextMenu>
         </Grid.ContextMenu>
         <Canvas Background="{x:Null}">

@@ -58,5 +58,18 @@ namespace Dynamo.ViewModels
                 return _addToGroupCommand;
             }
         }
+
+        private DelegateCommand _pinToNodeCommand;
+
+        [JsonIgnore]
+        public DelegateCommand PinToNodeCommand
+        {
+            get
+            {
+                if (_pinToNodeCommand == null)
+                    _pinToNodeCommand = new DelegateCommand(PinToNode, CanPinToNode);
+                return _pinToNodeCommand;
+            }
+        }
     }
 }
