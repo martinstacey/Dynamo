@@ -30,30 +30,23 @@ namespace Dynamo.Graph.Notes
             }
         }
 
+        public event EventHandler OnPinSet;
         private NodeModel pinNode;
         public NodeModel PinNode
         {
             get { return pinNode; }
             set
             {
+                OnPinSet(this, EventArgs.Empty);
                 pinNode = value;
                 if (value != null)
                 {
                     RaisePropertyChanged("PinNode");
                     RaisePropertyChanged("IsPinned");
                     pinNode.PropertyChanged += OnPropertyChanged;
-                    MoveOnTopOfNode(pinNode);
+                    MoveNoteAbovePinNode(pinNode);
                 }
             }
-        }
-
-        public bool IsPinned
-        {
-            get {
-                
-                return PinNode != null; 
-            }
-
         }
 
         /// <summary>
@@ -73,11 +66,22 @@ namespace Dynamo.Graph.Notes
         }
         void OnPropertyChanged(object sender, PropertyChangedEventArgs blabla)
         {
-                MoveOnTopOfNode(pinNode);
-            var a = 0;
+            MoveNoteAbovePinNode(pinNode);
         }
 
-        public void MoveOnTopOfNode(NodeModel nodeTopin)
+        void OnNotePropertyChanged(object sender, PropertyChangedEventArgs blabla)
+        {
+            MovePinNodeBellowNote(pinNode);
+        }
+
+        public void MovePinNodeBellowNote(NodeModel pinNode)
+        {
+            if (pinNode == null) return;
+            pinNode.CenterX = CenterX;
+            pinNode.CenterY = CenterY + pinNode.Height * 0.5 + DISTANCE_TO_PINNED_NODE;
+        }
+
+        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
         {
             if (nodeTopin == null) return;
             CenterX = nodeTopin.CenterX;

@@ -159,6 +159,7 @@ namespace Dynamo.ViewModels
                     break;
 
             }
+            
         }
 
         private void CreateGroup(object parameters)

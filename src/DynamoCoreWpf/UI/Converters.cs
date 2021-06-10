@@ -2418,11 +2418,28 @@ namespace Dynamo.Controls
         }
     }
 
+    public class PinNodeVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter == null) return Visibility.Hidden;
+            else return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter == null) return Visibility.Hidden;
+            else return Visibility.Visible;
+            //throw new NotImplementedException();
+        }
+    }
+
+
     /// <summary>
-        /// Converts element type of node search element in short string.
-        /// E.g. ElementTypes.Packaged => PKG.
-        /// </summary>
-        public class ElementTypeToShortConverter : IValueConverter
+    /// Converts element type of node search element in short string.
+    /// E.g. ElementTypes.Packaged => PKG.
+    /// </summary>
+    public class ElementTypeToShortConverter : IValueConverter
         {
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {

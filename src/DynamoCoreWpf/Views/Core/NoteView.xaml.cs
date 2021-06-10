@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Dynamo.Configuration;
+using Dynamo.Graph.Notes;
 using Dynamo.Selection;
 using Dynamo.UI;
 using Dynamo.UI.Prompts;
@@ -31,6 +32,15 @@ namespace Dynamo.Nodes
 
             Loaded += OnNoteViewLoaded;
             Unloaded += OnNoteViewUnloaded;
+
+        }
+        void OnPinSetted(object sender, EventArgs e)
+        {
+            var noteModel = sender as NoteModel;
+            if (noteModel.PinNode == null)
+                pinButton.Visibility = Visibility.Visible;
+            else 
+                pinButton.Visibility = Visibility.Hidden;
         }
 
         void OnNoteViewLoaded(object sender, RoutedEventArgs e)
@@ -45,6 +55,9 @@ namespace Dynamo.Nodes
             // update the corresponding model.
             // 
             ViewModel.UpdateSizeFromView(noteText.ActualWidth, noteText.ActualHeight);
+
+            ViewModel.Model.OnPinSet += OnPinSetted;
+            pinButton.Visibility = Visibility.Hidden;
         }
 
         void OnNoteViewUnloaded(object sender, RoutedEventArgs e)
@@ -152,5 +165,10 @@ namespace Dynamo.Nodes
                 child.ViewModel.ZIndex = Configurations.NodeStartZIndex;
             }
         }
-   }
+
+        private void pinButton_Click(object sender, RoutedEventArgs e)
+        {
+           // pinButton.Visibility = Visibility.Hidden;
+        }
+    }
 }

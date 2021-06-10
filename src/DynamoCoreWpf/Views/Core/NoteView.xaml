@@ -88,10 +88,10 @@
             BorderThickness="0"
             HorizontalAlignment="Right" 
             VerticalAlignment="Bottom"
-            IsEnabled="{Binding Path=IsPinned, Mode=OneWay}"
             Command="{Binding Path=UnpinFromNodeCommand}"
+            Click="pinButton_Click"
             >
-            <fa:ImageAwesome Icon="MapPin" Width="7" Foreground="Gray"/>
+            <fa:ImageAwesome Icon="ThumbTack" Width="7" Foreground="Gray"/>
         </Button>
     </Grid>
 </UserControl>
