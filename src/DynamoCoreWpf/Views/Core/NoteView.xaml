@@ -88,6 +88,7 @@
             BorderThickness="0"
             HorizontalAlignment="Right" 
             VerticalAlignment="Bottom"
+            IsEnabled="{Binding Path=IsPinned, Mode=OneWay}"
             Command="{Binding Path=UnpinFromNodeCommand}"
             >
             <fa:ImageAwesome Icon="MapPin" Width="7" Foreground="Gray"/>

@@ -2,6 +2,7 @@
 using System.Linq;
 using Dynamo.Configuration;
 using Dynamo.Graph;
+using Dynamo.Graph.Nodes;
 using Dynamo.Graph.Notes;
 using Dynamo.Selection;
 using Dynamo.Wpf.ViewModels.Core;
@@ -222,7 +223,12 @@ namespace Dynamo.ViewModels
 
         private void PinToNode(object parameters)
         {
+            
+            var nodeToPin = DynamoSelection.Instance.Selection
+                .OfType<NodeModel>()
+                .First();
 
+            Model.PinNode = nodeToPin;
         }
 
         private bool CanPinToNode(object parameters)
@@ -232,6 +238,7 @@ namespace Dynamo.ViewModels
 
         private void UnpinFromNode(object parameters)
         {
+            Model.PinNode = null;
         }
 
         private bool CanUnpinFromNode(object parameters)

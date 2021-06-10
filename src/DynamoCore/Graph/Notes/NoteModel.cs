@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Xml;
 using Dynamo.Graph.Nodes;
@@ -36,8 +37,23 @@ namespace Dynamo.Graph.Notes
             set
             {
                 pinNode = value;
-                RaisePropertyChanged("PinNode");
+                if (value != null)
+                {
+                    RaisePropertyChanged("PinNode");
+                    RaisePropertyChanged("IsPinned");
+                    pinNode.PropertyChanged += OnPropertyChanged;
+                    MoveOnTopOfNode(pinNode);
+                }
             }
+        }
+
+        public bool IsPinned
+        {
+            get {
+                
+                return PinNode != null; 
+            }
+
         }
 
         /// <summary>
@@ -53,10 +69,17 @@ namespace Dynamo.Graph.Notes
             Y = y;
             Text = text;
             GUID = guid;
+            
+        }
+        void OnPropertyChanged(object sender, PropertyChangedEventArgs blabla)
+        {
+                MoveOnTopOfNode(pinNode);
+            var a = 0;
         }
 
         public void MoveOnTopOfNode(NodeModel nodeTopin)
         {
+            if (nodeTopin == null) return;
             CenterX = nodeTopin.CenterX;
             CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
         }
