@@ -91,7 +91,14 @@
             Command="{Binding Path=UnpinFromNodeCommand}"
             Click="pinButton_Click"
             >
-            <fa:ImageAwesome Icon="ThumbTack" Width="7" Foreground="Gray"/>
+            <Image
+                Source="/DynamoCoreWpf;component/UI/Images/pin_dark.png"
+                
+                Width="10"
+            />
         </Button>
+
+
+
     </Grid>
 </UserControl>
