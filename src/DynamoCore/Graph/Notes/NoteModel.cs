@@ -44,9 +44,15 @@ namespace Dynamo.Graph.Notes
                     RaisePropertyChanged("PinNode");
                     RaisePropertyChanged("IsPinned");
                     pinNode.PropertyChanged += OnPropertyChanged;
+                    //pinNode.RequestSelection += SomeMethod;
                     MoveNoteAbovePinNode(pinNode);
                 }
             }
+        }
+
+        private void NoteModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -66,6 +72,10 @@ namespace Dynamo.Graph.Notes
         }
         void OnPropertyChanged(object sender, PropertyChangedEventArgs blabla)
         {
+            //if (blabla.PropertyName == nameof(NodeModel.IsSelected))
+            //{
+            //    DynamoSelection.Instance.Selection.Add(this);
+            //}
             MoveNoteAbovePinNode(pinNode);
         }
 
