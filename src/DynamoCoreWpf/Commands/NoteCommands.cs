@@ -61,6 +61,9 @@ namespace Dynamo.ViewModels
 
         private DelegateCommand _pinToNodeCommand;
 
+        /// <summary>
+        /// Command to pin the current note to a selected node
+        /// </summary>
         [JsonIgnore]
         public DelegateCommand PinToNodeCommand
         {
