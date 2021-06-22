@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -89,8 +90,19 @@ namespace Dynamo.Nodes
         void OnNoteTextPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             System.Guid noteGuid = this.ViewModel.Model.GUID;
-            ViewModel.WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
-                new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
+            if (ViewModel.Model.PinNode == null)
+            {
+                ViewModel.WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
+                    new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
+            }
+            else
+            {
+                Guid nodeGuid = ViewModel.Model.PinNode.GUID;
+                var selectionGuids = new List<Guid> { noteGuid, nodeGuid };
+                ViewModel.WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
+                    new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));
+            }
+
             BringToFront();
            
         }
