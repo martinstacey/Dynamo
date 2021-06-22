@@ -234,7 +234,17 @@ namespace Dynamo.ViewModels
 
         private bool CanPinToNode(object parameters)
         {
-            return true;
+            try
+            {
+                var nodeToPin = DynamoSelection.Instance.Selection
+                    .OfType<NodeModel>()
+                    .First();
+                return nodeToPin != null;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void UnpinFromNode(object parameters)
@@ -242,10 +252,6 @@ namespace Dynamo.ViewModels
             Model.PinNode = null;
         }
 
-        private bool CanUnpinFromNode(object parameters)
-        {
-            return true;
-        }
 
     }
 }
