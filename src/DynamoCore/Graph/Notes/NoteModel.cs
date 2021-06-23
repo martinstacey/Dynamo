@@ -35,11 +35,6 @@ namespace Dynamo.Graph.Notes
             {
                 OnPinSet(this, EventArgs.Empty);
                 pinNode = value;               
-                if (value != null)
-                {
-                    
-                    pinNode.PropertyChanged += OnPinNode_PropertyChanged;
-                }
                 RaisePropertyChanged("PinNode");
                 RaisePropertyChanged("IsPinned");
             }
@@ -62,15 +57,6 @@ namespace Dynamo.Graph.Notes
             Text = text;
             GUID = guid;
             
-        }
-        void OnPinNode_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "IsSelected")
-            {
-                if (IsSelected !=PinNode.IsSelected)
-                OnPinNodeSelected(this, EventArgs.Empty);
-            }
-
         }
 
         #region Command Framework Supporting Methods

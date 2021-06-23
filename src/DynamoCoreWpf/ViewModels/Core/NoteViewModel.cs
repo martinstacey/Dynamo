@@ -113,7 +113,7 @@ namespace Dynamo.ViewModels
             DynamoSelection.Instance.Selection.CollectionChanged += SelectionOnCollectionChanged;
             ZIndex = ++StaticZIndex; // places the note on top of all nodes/notes
             model.OnPinNodeSelected += NoteViewModel_PinNodeSelected;
-            
+
         }
 
         private void NoteViewModel_PinNodeSelected(object sender, EventArgs e)
@@ -247,6 +247,25 @@ namespace Dynamo.ViewModels
             MoveNoteAbovePinNode(nodeToPin);
 
             Model.PinNode = nodeToPin;
+            Model.PinNode.PropertyChanged += PinNode_PropertyChanged;
+        }
+
+        private void PinNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            //Check if both were selected
+            if (e.PropertyName == "IsSelected" && Model.PinNode.IsSelected)
+            {
+
+
+                if (IsSelected )
+                {
+                    return;
+                }
+
+                SelectNote();
+                    //OnPinNodeSelected(this, EventArgs.Empty);
+            }
+            //throw new NotImplementedException();
         }
 
         private bool CanPinToNode(object parameters)
@@ -277,7 +296,9 @@ namespace Dynamo.ViewModels
 
         private void UnpinFromNode(object parameters)
         {
+            Model.PinNode.PropertyChanged -= PinNode_PropertyChanged;
             Model.PinNode = null;
+            
         }
 
         internal void SelectNoteAndPinNode()
