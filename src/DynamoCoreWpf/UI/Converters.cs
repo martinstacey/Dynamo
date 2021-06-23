@@ -2491,7 +2491,6 @@ namespace Dynamo.Controls
         {
             if (parameter == null) return Visibility.Hidden;
             else return Visibility.Visible;
-            //throw new NotImplementedException();
         }
     }
 

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Xml;
 using Dynamo.Graph.Nodes;
-using Dynamo.Selection;
 using Dynamo.Utilities;
 
 namespace Dynamo.Graph.Notes
