@@ -27,7 +27,6 @@ namespace Dynamo.Graph.Notes
             }
         }
 
-        public event EventHandler OnPinSet;
         private NodeModel pinNode;
         public NodeModel PinNode
         {
@@ -35,16 +34,19 @@ namespace Dynamo.Graph.Notes
             set
             {
                 OnPinSet(this, EventArgs.Empty);
-                pinNode = value;
+                pinNode = value;               
                 if (value != null)
                 {
-                    RaisePropertyChanged("PinNode");
-                    RaisePropertyChanged("IsPinned");
-                    pinNode.PropertyChanged += OnPropertyChanged;
-                    MoveNoteAbovePinNode(pinNode);
+                    
+                    pinNode.PropertyChanged += OnPinNode_PropertyChanged;
                 }
+                RaisePropertyChanged("PinNode");
+                RaisePropertyChanged("IsPinned");
             }
         }
+
+        public event EventHandler OnPinSet;
+        public event EventHandler OnPinNodeSelected;
 
         /// <summary>
         /// Creates NoteModel.
@@ -61,28 +63,14 @@ namespace Dynamo.Graph.Notes
             GUID = guid;
             
         }
-        void OnPropertyChanged(object sender, PropertyChangedEventArgs blabla)
+        void OnPinNode_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MoveNoteAbovePinNode(pinNode);
-        }
+            if (e.PropertyName == "IsSelected")
+            {
+                if (IsSelected !=PinNode.IsSelected)
+                OnPinNodeSelected(this, EventArgs.Empty);
+            }
 
-        void OnNotePropertyChanged(object sender, PropertyChangedEventArgs blabla)
-        {
-            MovePinNodeBellowNote(pinNode);
-        }
-
-        public void MovePinNodeBellowNote(NodeModel pinNode)
-        {
-            if (pinNode == null) return;
-            pinNode.CenterX = CenterX;
-            pinNode.CenterY = CenterY + pinNode.Height * 0.5 + DISTANCE_TO_PINNED_NODE;
-        }
-
-        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
-        {
-            if (nodeTopin == null) return;
-            CenterX = nodeTopin.CenterX;
-            CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
         }
 
         #region Command Framework Supporting Methods

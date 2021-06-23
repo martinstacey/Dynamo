@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Dynamo.Configuration;
 using Dynamo.Graph;
 using Dynamo.Graph.Nodes;
 using Dynamo.Graph.Notes;
 using Dynamo.Selection;
+using Dynamo.Utilities;
 using Dynamo.Wpf.ViewModels.Core;
 using Newtonsoft.Json;
+using DynCmd = Dynamo.Models.DynamoModel;
 
 namespace Dynamo.ViewModels
 {
     public partial class NoteViewModel: ViewModelBase
     {
+        private int DISTANCE_TO_PINNED_NODE = 24;
+
         #region Events
 
         public event EventHandler RequestsSelection;
@@ -106,6 +112,15 @@ namespace Dynamo.ViewModels
             model.PropertyChanged += note_PropertyChanged;
             DynamoSelection.Instance.Selection.CollectionChanged += SelectionOnCollectionChanged;
             ZIndex = ++StaticZIndex; // places the note on top of all nodes/notes
+            model.OnPinNodeSelected += NoteViewModel_PinNodeSelected;
+            
+        }
+
+        private void NoteViewModel_PinNodeSelected(object sender, EventArgs e)
+        {
+            var a = 0;
+            SelectNote();
+            //SelectNoteAndPinNode();
         }
 
         public override void Dispose()
@@ -229,6 +244,8 @@ namespace Dynamo.ViewModels
                 .OfType<NodeModel>()
                 .First();
 
+            MoveNoteAbovePinNode(nodeToPin);
+
             Model.PinNode = nodeToPin;
         }
 
@@ -247,9 +264,49 @@ namespace Dynamo.ViewModels
             }
         }
 
+        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
+        {
+            if (nodeTopin == null)
+            {
+                return;
+            }
+               
+            Model.CenterX = nodeTopin.CenterX;
+            Model.CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
+        }
+
         private void UnpinFromNode(object parameters)
         {
             Model.PinNode = null;
+        }
+
+        internal void SelectNoteAndPinNode()
+        {
+            System.Guid noteGuid = Model.GUID;
+            if (Model.PinNode == null)
+            {
+                WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
+                    new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
+            }
+            else
+            {
+                Guid nodeGuid = Model.PinNode.GUID;
+                var selectionGuids = new List<Guid> { noteGuid, nodeGuid };
+                WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
+                    new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));
+            }
+        }
+        internal void SelectNote()
+        {
+            //OnRequestsSelection();
+            //Select(this);
+            //DynamoSelection.Instance.Selection.Add(Model);
+            //System.Guid noteGuid = Model.GUID;
+
+            //    WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
+            //        new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
+
+
         }
 
 
