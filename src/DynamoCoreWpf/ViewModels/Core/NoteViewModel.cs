@@ -252,9 +252,22 @@ namespace Dynamo.ViewModels
 
             MoveNoteAbovePinNode(nodeToPin);
 
+            var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == nodeToPin.GUID).FirstOrDefault();
+            nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
+
             Model.PinNode = nodeToPin;
-            Model.PinNode.PropertyChanged += PinNode_PropertyChanged;
             RaisePropertyChanged(nameof(PinNode));
+        }
+
+        private void NodeViewModel_RequestsSelection(object sender, EventArgs e)
+        {
+
+            if (!(sender is NodeViewModel node) || node.Id != PinNode.GUID)
+            {
+                return;
+            }
+
+            DynamoSelection.Instance.Selection.AddUnique(Model);
         }
 
         private void PinNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -328,7 +341,8 @@ namespace Dynamo.ViewModels
         {
             //OnRequestsSelection();
             //Select(this);
-            //DynamoSelection.Instance.Selection.Add(Model);
+            
+            //DynamoSelection.Instance.Selection.AddUnique(Model);
             //System.Guid noteGuid = Model.GUID;
 
             //    WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
@@ -337,6 +351,17 @@ namespace Dynamo.ViewModels
 
         }
 
+        private void Selection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            //if (e.NewItems is null)
+            //{
+            //    return;
+            //}
 
+            //if (e.NewItems.Contains(PinNode))
+            //{
+            //    DynamoSelection.Instance.Selection.AddUnique(Model);
+            //}
+        }
     }
 }
