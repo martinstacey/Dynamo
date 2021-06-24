@@ -35,14 +35,6 @@ namespace Dynamo.Nodes
             Unloaded += OnNoteViewUnloaded;
 
         }
-        void OnPinSetted(object sender, EventArgs e)
-        {
-            var noteModel = sender as NoteModel;
-            if (noteModel.PinNode == null)
-                pinButton.Visibility = Visibility.Visible;
-            else 
-                pinButton.Visibility = Visibility.Hidden;
-        }
 
         void OnNoteViewLoaded(object sender, RoutedEventArgs e)
         {
@@ -57,8 +49,6 @@ namespace Dynamo.Nodes
             // 
             ViewModel.UpdateSizeFromView(noteText.ActualWidth, noteText.ActualHeight);
 
-            ViewModel.Model.OnPinSet += OnPinSetted;
-            pinButton.Visibility = Visibility.Hidden;
         }
 
         void OnNoteViewUnloaded(object sender, RoutedEventArgs e)
@@ -179,9 +169,5 @@ namespace Dynamo.Nodes
             }
         }
 
-        private void pinButton_Click(object sender, RoutedEventArgs e)
-        {
-           // pinButton.Visibility = Visibility.Hidden;
-        }
     }
 }

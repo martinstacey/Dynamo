@@ -103,6 +103,12 @@ namespace Dynamo.ViewModels
             get { return _model.IsSelected; }
         }
 
+        private NodeModel pinNode;
+        public NodeModel PinNode
+        {
+            get { return _model.PinNode; }
+        }
+
         #endregion
 
         public NoteViewModel(WorkspaceViewModel workspaceViewModel, NoteModel model)
@@ -248,6 +254,7 @@ namespace Dynamo.ViewModels
 
             Model.PinNode = nodeToPin;
             Model.PinNode.PropertyChanged += PinNode_PropertyChanged;
+            RaisePropertyChanged(nameof(PinNode));
         }
 
         private void PinNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -298,7 +305,7 @@ namespace Dynamo.ViewModels
         {
             Model.PinNode.PropertyChanged -= PinNode_PropertyChanged;
             Model.PinNode = null;
-            
+            RaisePropertyChanged(nameof(PinNode));
         }
 
         internal void SelectNoteAndPinNode()

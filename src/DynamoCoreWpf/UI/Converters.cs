@@ -2479,20 +2479,6 @@ namespace Dynamo.Controls
         }
     }
 
-    public class PinNodeVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (parameter == null) return Visibility.Hidden;
-            else return Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (parameter == null) return Visibility.Hidden;
-            else return Visibility.Visible;
-        }
-    }
 
 
     /// <summary>

@@ -11,7 +11,6 @@ namespace Dynamo.Graph.Notes
     /// </summary>
     public class NoteModel : ModelBase
     {
-        private int DISTANCE_TO_PINNED_NODE = 24;
 
         private string text;
         /// <summary>
@@ -33,14 +32,11 @@ namespace Dynamo.Graph.Notes
             get { return pinNode; }
             set
             {
-                OnPinSet(this, EventArgs.Empty);
                 pinNode = value;               
                 RaisePropertyChanged("PinNode");
-                RaisePropertyChanged("IsPinned");
             }
         }
 
-        public event EventHandler OnPinSet;
         public event EventHandler OnPinNodeSelected;
 
         /// <summary>

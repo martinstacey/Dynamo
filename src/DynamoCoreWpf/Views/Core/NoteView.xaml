@@ -5,6 +5,7 @@
              xmlns:p="clr-namespace:Dynamo.Wpf.Properties"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:controls="clr-namespace:Dynamo.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200" 
              MinWidth="50"
@@ -13,6 +14,12 @@
              Canvas.Left="{Binding Left, Mode=TwoWay}" 
              Canvas.Top="{Binding Top, Mode=TwoWay}" 
              MouseDown="OnNoteMouseDown" >
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <controls:NullToVisibiltyConverter x:Key="nullToVisibiltyConverter"  />
+        </ResourceDictionary>
+    </UserControl.Resources>
     
     <Grid Name="BaseGrid">
         <Grid.ContextMenu>
@@ -89,7 +96,7 @@
             HorizontalAlignment="Right" 
             VerticalAlignment="Bottom"
             Command="{Binding Path=UnpinFromNodeCommand}"
-            Click="pinButton_Click"
+            Visibility="{Binding Path=PinNode, Converter={StaticResource nullToVisibiltyConverter }, UpdateSourceTrigger=PropertyChanged}"
             >
             <Image
                 Source="/DynamoCoreWpf;component/UI/Images/Pin_NoBackground_16px.png"
