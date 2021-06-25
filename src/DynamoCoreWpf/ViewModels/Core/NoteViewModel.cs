@@ -118,15 +118,7 @@ namespace Dynamo.ViewModels
             model.PropertyChanged += note_PropertyChanged;
             DynamoSelection.Instance.Selection.CollectionChanged += SelectionOnCollectionChanged;
             ZIndex = ++StaticZIndex; // places the note on top of all nodes/notes
-            model.OnPinNodeSelected += NoteViewModel_PinNodeSelected;
 
-        }
-
-        private void NoteViewModel_PinNodeSelected(object sender, EventArgs e)
-        {
-            var a = 0;
-            SelectNote();
-            //SelectNoteAndPinNode();
         }
 
         public override void Dispose()
@@ -259,35 +251,6 @@ namespace Dynamo.ViewModels
             RaisePropertyChanged(nameof(PinNode));
         }
 
-        private void NodeViewModel_RequestsSelection(object sender, EventArgs e)
-        {
-
-            if (!(sender is NodeViewModel node) || node.Id != PinNode.GUID)
-            {
-                return;
-            }
-
-            DynamoSelection.Instance.Selection.AddUnique(Model);
-        }
-
-        private void PinNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //Check if both were selected
-            if (e.PropertyName == "IsSelected" && Model.PinNode.IsSelected)
-            {
-
-
-                if (IsSelected )
-                {
-                    return;
-                }
-
-                SelectNote();
-                    //OnPinNodeSelected(this, EventArgs.Empty);
-            }
-            //throw new NotImplementedException();
-        }
-
         private bool CanPinToNode(object parameters)
         {
             try
@@ -303,25 +266,30 @@ namespace Dynamo.ViewModels
             }
         }
 
-        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
-        {
-            if (nodeTopin == null)
-            {
-                return;
-            }
-               
-            Model.CenterX = nodeTopin.CenterX;
-            Model.CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
-        }
-
         private void UnpinFromNode(object parameters)
         {
-            Model.PinNode.PropertyChanged -= PinNode_PropertyChanged;
-
             var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == Model.PinNode.GUID).FirstOrDefault();
             nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
             Model.PinNode = null;
             RaisePropertyChanged(nameof(PinNode));
+        }
+
+        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
+        {
+            Model.CenterX = nodeTopin.CenterX;
+            Model.CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
+        }
+
+
+        private void NodeViewModel_RequestsSelection(object sender, EventArgs e)
+        {
+
+            if (!(sender is NodeViewModel node) || node.Id != PinNode.GUID)
+            {
+                return;
+            }
+
+            DynamoSelection.Instance.Selection.AddUnique(Model);
         }
 
         internal void SelectNoteAndPinNode()
@@ -339,32 +307,6 @@ namespace Dynamo.ViewModels
                 WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
                     new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));
             }
-        }
-        internal void SelectNote()
-        {
-            //OnRequestsSelection();
-            //Select(this);
-            
-            //DynamoSelection.Instance.Selection.AddUnique(Model);
-            //System.Guid noteGuid = Model.GUID;
-
-            //    WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
-            //        new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
-
-
-        }
-
-        private void Selection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            //if (e.NewItems is null)
-            //{
-            //    return;
-            //}
-
-            //if (e.NewItems.Contains(PinNode))
-            //{
-            //    DynamoSelection.Instance.Selection.AddUnique(Model);
-            //}
         }
     }
 }
