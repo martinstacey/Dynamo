@@ -16,7 +16,7 @@ namespace Dynamo.ViewModels
 {
     public partial class NoteViewModel: ViewModelBase
     {
-        private int DISTANCE_TO_PINNED_NODE = 24;
+        private int DISTANCE_TO_PINNED_NODE = 12;
 
         #region Events
 
@@ -258,7 +258,7 @@ namespace Dynamo.ViewModels
                 var nodeToPin = DynamoSelection.Instance.Selection
                     .OfType<NodeModel>()
                     .First();
-                return nodeToPin != null;
+                return nodeToPin != null && Model.PinNode==null;
             }
             catch
             {
@@ -276,8 +276,9 @@ namespace Dynamo.ViewModels
 
         public void MoveNoteAbovePinNode(NodeModel nodeTopin)
         {
+
             Model.CenterX = nodeTopin.CenterX;
-            Model.CenterY = nodeTopin.CenterY - nodeTopin.Height * 0.5 - DISTANCE_TO_PINNED_NODE;
+            Model.CenterY = nodeTopin.CenterY - (nodeTopin.Height * 0.5) - (Model.Height * 0.5) - DISTANCE_TO_PINNED_NODE;
         }
 
 
