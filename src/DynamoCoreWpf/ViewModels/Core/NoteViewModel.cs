@@ -317,6 +317,9 @@ namespace Dynamo.ViewModels
         private void UnpinFromNode(object parameters)
         {
             Model.PinNode.PropertyChanged -= PinNode_PropertyChanged;
+
+            var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == Model.PinNode.GUID).FirstOrDefault();
+            nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
             Model.PinNode = null;
             RaisePropertyChanged(nameof(PinNode));
         }
