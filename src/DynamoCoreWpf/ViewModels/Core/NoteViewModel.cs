@@ -17,6 +17,7 @@ namespace Dynamo.ViewModels
     public partial class NoteViewModel: ViewModelBase
     {
         private int DISTANCE_TO_PINNED_NODE = 12;
+        private int DISTANCE_TO_PINNED_NODE_WITH_WARNING = 32;
 
         #region Events
 
@@ -246,9 +247,32 @@ namespace Dynamo.ViewModels
 
             var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == nodeToPin.GUID).FirstOrDefault();
             nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
-
+            nodeViewModel.PropertyChanged += NodeViewModel_PropertyChanged;
+            nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;           
             Model.PinNode = nodeToPin;
+            ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
             RaisePropertyChanged(nameof(PinNode));
+        }
+
+        private void NodeModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "State")
+            {
+                MoveNoteAbovePinNode(Model.PinNode);
+            }
+            if (e.PropertyName == "Position")
+            {
+                MoveNoteAbovePinNode(Model.PinNode);
+            }
+        }
+
+        private void NodeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ZIndex")
+            {
+                var node = sender as NodeViewModel;
+                ZIndex = Convert.ToInt32(node.ErrorBubble.ZIndex - 1);
+            }
         }
 
         private bool CanPinToNode(object parameters)
@@ -270,15 +294,17 @@ namespace Dynamo.ViewModels
         {
             var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == Model.PinNode.GUID).FirstOrDefault();
             nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
+            nodeViewModel.NodeModel.PropertyChanged -= NodeModel_PropertyChanged;
             Model.PinNode = null;
             RaisePropertyChanged(nameof(PinNode));
         }
 
         public void MoveNoteAbovePinNode(NodeModel nodeTopin)
         {
-
+            var distanceToNode = DISTANCE_TO_PINNED_NODE;
+            if (nodeTopin.State == ElementState.Error || nodeTopin.State == ElementState.Warning) distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
             Model.CenterX = nodeTopin.CenterX;
-            Model.CenterY = nodeTopin.CenterY - (nodeTopin.Height * 0.5) - (Model.Height * 0.5) - DISTANCE_TO_PINNED_NODE;
+            Model.CenterY = nodeTopin.CenterY - (nodeTopin.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
         }
 
 
