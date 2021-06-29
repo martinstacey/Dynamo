@@ -107,7 +107,7 @@ namespace Dynamo.ViewModels
         private NodeModel pinNode;
         public NodeModel PinNode
         {
-            get { return _model.PinNode; }
+            get { return _model.PinnedNode; }
         }
 
         #endregion
@@ -247,7 +247,7 @@ namespace Dynamo.ViewModels
             nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
             nodeViewModel.PropertyChanged += NodeViewModel_PropertyChanged;
             nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;           
-            Model.PinNode = nodeToPin;
+            Model.PinnedNode = nodeToPin;
             ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
             RaisePropertyChanged(nameof(PinNode));
         }
@@ -256,11 +256,11 @@ namespace Dynamo.ViewModels
         {
             if (e.PropertyName == "State")
             {
-                MoveNoteAbovePinNode(Model.PinNode);
+                MoveNoteAbovePinNode(Model.PinnedNode);
             }
             if (e.PropertyName == "Position")
             {
-                MoveNoteAbovePinNode(Model.PinNode);
+                MoveNoteAbovePinNode(Model.PinnedNode);
             }
         }
 
@@ -280,7 +280,7 @@ namespace Dynamo.ViewModels
                 var nodeToPin = DynamoSelection.Instance.Selection
                     .OfType<NodeModel>()
                     .First();
-                return nodeToPin != null && Model.PinNode==null;
+                return nodeToPin != null && Model.PinnedNode==null;
             }
             catch
             {
@@ -290,23 +290,25 @@ namespace Dynamo.ViewModels
 
         private void UnpinFromNode(object parameters)
         {
-            var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == Model.PinNode.GUID).FirstOrDefault();
+            var nodeViewModel = WorkspaceViewModel.Nodes
+                .Where(x => x.Id == Model.PinnedNode.GUID)
+                .FirstOrDefault();
             nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
             nodeViewModel.NodeModel.PropertyChanged -= NodeModel_PropertyChanged;
-            Model.PinNode = null;
+            Model.PinnedNode = null;
             RaisePropertyChanged(nameof(PinNode));
         }
 
-        public void MoveNoteAbovePinNode(NodeModel nodeTopin)
+        private void MoveNoteAbovePinNode(NodeModel nodeToPin)
         {
             var distanceToNode = DISTANCE_TO_PINNED_NODE;
-            if (nodeTopin.State == ElementState.Error ||
-                nodeTopin.State == ElementState.Warning)
+            if (nodeToPin.State == ElementState.Error ||
+                nodeToPin.State == ElementState.Warning)
             {
                 distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
             }
-            Model.CenterX = nodeTopin.CenterX;
-            Model.CenterY = nodeTopin.CenterY - (nodeTopin.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
+            Model.CenterX = nodeToPin.CenterX;
+            Model.CenterY = nodeToPin.CenterY - (nodeToPin.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
         }
 
 
@@ -324,14 +326,14 @@ namespace Dynamo.ViewModels
         internal void SelectNoteAndPinNode()
         {
             System.Guid noteGuid = Model.GUID;
-            if (Model.PinNode == null)
+            if (Model.PinnedNode == null)
             {
                 WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
                     new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
             }
             else
             {
-                Guid nodeGuid = Model.PinNode.GUID;
+                Guid nodeGuid = Model.PinnedNode.GUID;
                 var selectionGuids = new List<Guid> { noteGuid, nodeGuid };
                 WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
                     new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));

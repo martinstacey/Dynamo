@@ -26,18 +26,25 @@ namespace Dynamo.Graph.Notes
             }
         }
 
-        private NodeModel pinNode;
-        public NodeModel PinNode
+        private NodeModel pinnedNode;
+
+        /// <summary>
+        /// When using the pin to node command, node model to which note is pinned to
+        /// </summary>
+        public NodeModel PinnedNode
         {
-            get { return pinNode; }
+            get { return pinnedNode; }
             set
             {
-                pinNode = value;               
-                RaisePropertyChanged("PinNode");
+                pinnedNode = value;               
+                RaisePropertyChanged(nameof(PinnedNode));
             }
         }
 
-        public event EventHandler OnPinNodeSelected;
+        /// <summary>
+        /// Event when pinned node is selected
+        /// </summary>
+        public event EventHandler OnPinnedNodeSelected;
 
         /// <summary>
         /// Creates NoteModel.

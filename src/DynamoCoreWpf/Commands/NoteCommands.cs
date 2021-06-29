@@ -59,7 +59,7 @@ namespace Dynamo.ViewModels
             }
         }
 
-        private DelegateCommand _pinToNodeCommand;
+        private DelegateCommand pinToNodeCommand;
 
         /// <summary>
         /// Command to pin the current note to a selected node
@@ -69,9 +69,11 @@ namespace Dynamo.ViewModels
         {
             get
             {
-                if (_pinToNodeCommand == null)
-                    _pinToNodeCommand = new DelegateCommand(PinToNode, CanPinToNode);
-                return _pinToNodeCommand;
+                if (pinToNodeCommand == null)
+                {
+                    pinToNodeCommand = new DelegateCommand(PinToNode, CanPinToNode);
+                } 
+                return pinToNodeCommand;
             }
         }
 
