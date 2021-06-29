@@ -34,7 +34,6 @@ namespace Dynamo.Nodes
 
             Loaded += OnNoteViewLoaded;
             Unloaded += OnNoteViewUnloaded;
-
         }
 
         void OnNoteViewLoaded(object sender, RoutedEventArgs e)
@@ -49,7 +48,6 @@ namespace Dynamo.Nodes
             // update the corresponding model.
             // 
             ViewModel.UpdateSizeFromView(noteText.ActualWidth, noteText.ActualHeight);
-
         }
 
         void OnNoteViewUnloaded(object sender, RoutedEventArgs e)
@@ -155,6 +153,5 @@ namespace Dynamo.Nodes
                 child.ViewModel.ZIndex = Configurations.NodeStartZIndex;
             }
         }
-
     }
 }

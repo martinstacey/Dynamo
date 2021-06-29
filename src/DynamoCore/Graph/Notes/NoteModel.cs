@@ -11,8 +11,8 @@ namespace Dynamo.Graph.Notes
     /// </summary>
     public class NoteModel : ModelBase
     {
-
         private string text;
+
         /// <summary>
         /// Returns the text inside the note.
         /// </summary>
@@ -52,7 +52,6 @@ namespace Dynamo.Graph.Notes
             Y = y;
             Text = text;
             GUID = guid;
-            
         }
 
         #region Command Framework Supporting Methods

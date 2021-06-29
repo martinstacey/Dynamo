@@ -2479,13 +2479,11 @@ namespace Dynamo.Controls
         }
     }
 
-
-
-    /// <summary>
-    /// Converts element type of node search element in short string.
-    /// E.g. ElementTypes.Packaged => PKG.
-    /// </summary>
-    public class ElementTypeToShortConverter : IValueConverter
+        /// <summary>
+        /// Converts element type of node search element in short string.
+        /// E.g. ElementTypes.Packaged => PKG.
+        /// </summary>
+        public class ElementTypeToShortConverter : IValueConverter
         {
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {

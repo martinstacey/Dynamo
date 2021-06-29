@@ -119,7 +119,6 @@ namespace Dynamo.ViewModels
             model.PropertyChanged += note_PropertyChanged;
             DynamoSelection.Instance.Selection.CollectionChanged += SelectionOnCollectionChanged;
             ZIndex = ++StaticZIndex; // places the note on top of all nodes/notes
-
         }
 
         public override void Dispose()
@@ -173,7 +172,6 @@ namespace Dynamo.ViewModels
                     break;
 
             }
-            
         }
 
         private void CreateGroup(object parameters)
@@ -302,7 +300,11 @@ namespace Dynamo.ViewModels
         public void MoveNoteAbovePinNode(NodeModel nodeTopin)
         {
             var distanceToNode = DISTANCE_TO_PINNED_NODE;
-            if (nodeTopin.State == ElementState.Error || nodeTopin.State == ElementState.Warning) distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
+            if (nodeTopin.State == ElementState.Error ||
+                nodeTopin.State == ElementState.Warning)
+            {
+                distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
+            }
             Model.CenterX = nodeTopin.CenterX;
             Model.CenterY = nodeTopin.CenterY - (nodeTopin.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
         }
