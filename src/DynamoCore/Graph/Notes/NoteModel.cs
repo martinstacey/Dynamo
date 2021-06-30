@@ -29,7 +29,11 @@ namespace Dynamo.Graph.Notes
         private NodeModel pinnedNode;
 
         /// <summary>
-        /// When using the pin to node command, node model to which note is pinned to
+        /// NodeModel which this Note is pinned to
+        /// When using the pin to node command  
+        /// note and node become entangled so that 
+        /// if you select and move one the other one 
+        /// moves as well. 
         /// </summary>
         public NodeModel PinnedNode
         {
