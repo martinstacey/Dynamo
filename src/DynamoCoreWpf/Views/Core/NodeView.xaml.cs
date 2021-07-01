@@ -406,6 +406,8 @@ namespace Dynamo.Controls
         {
             if (ViewModel == null || Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control) return;
 
+            ViewModel.SelectCommand.Execute(null);
+
             var view = WpfUtilities.FindUpVisualTree<DynamoView>(this);
             ViewModel.DynamoViewModel.OnRequestReturnFocusToView();
             view.mainGrid.Focus();
