@@ -104,8 +104,6 @@ namespace Dynamo.ViewModels
             get { return _model.IsSelected; }
         }
 
-        private NodeModel pinnedNode;
-
         /// <summary>
         /// NodeModel which this Note is pinned to
         /// When using the pin to node command  
@@ -140,6 +138,7 @@ namespace Dynamo.ViewModels
             CreateGroupCommand.RaiseCanExecuteChanged();
             AddToGroupCommand.RaiseCanExecuteChanged();
             UngroupCommand.RaiseCanExecuteChanged();
+            PinToNodeCommand.RaiseCanExecuteChanged();
         }
 
         private void Select(object parameter)
@@ -177,6 +176,9 @@ namespace Dynamo.ViewModels
                     break;
                 case "IsSelected":
                     RaisePropertyChanged("IsSelected");
+                    break;
+                case nameof(NoteModel.PinnedNode):
+                    PinToNodeCommand.RaiseCanExecuteChanged();
                     break;
 
             }
@@ -298,7 +300,7 @@ namespace Dynamo.ViewModels
                     .OfType<NodeModel>()
                     .FirstOrDefault();
             
-            if (nodeToPin == null && Model.PinnedNode != null)
+            if (nodeToPin == null || Model.PinnedNode != null)
                 {
                 return false;
                 }
