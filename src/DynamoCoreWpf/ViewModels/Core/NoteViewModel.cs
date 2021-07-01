@@ -353,7 +353,7 @@ namespace Dynamo.ViewModels
             }
             else
             {
-                Guid nodeGuid = Model.PinnedNode.GUID;
+                var nodeGuid = Model.PinnedNode.GUID;
                 var selectionGuids = new List<Guid> { noteGuid, nodeGuid };
                 WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
                     new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));
