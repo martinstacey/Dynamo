@@ -77,16 +77,20 @@ namespace Dynamo.ViewModels
             }
         }
 
-        private DelegateCommand _unpinFromNodeCommand;
-
+        private DelegateCommand unpinFromNodeCommand;
+        /// <summary>
+        /// Command to unpin the pinned node (sets it to null)
+        /// </summary>
         [JsonIgnore]
         public DelegateCommand UnpinFromNodeCommand
         {
             get
             {
-                if (_unpinFromNodeCommand == null)
-                    _unpinFromNodeCommand = new DelegateCommand(UnpinFromNode);
-                return _unpinFromNodeCommand;
+                if (unpinFromNodeCommand == null)
+                {
+                    unpinFromNodeCommand = new DelegateCommand(UnpinFromNode);
+                }
+                return unpinFromNodeCommand;
             }
         }
     }
