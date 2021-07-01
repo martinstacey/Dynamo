@@ -258,11 +258,15 @@ namespace Dynamo.ViewModels
 
 
             MoveNoteAbovePinnedNode(nodeToPin);
+            nodeToPin.PropertyChanged += NodeModel_PropertyChanged;
 
-            var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == nodeToPin.GUID).FirstOrDefault();
+            var nodeViewModel = WorkspaceViewModel.Nodes
+                .Where(x => x.Id == nodeToPin.GUID)
+                .FirstOrDefault();
+
             nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
             nodeViewModel.PropertyChanged += NodeViewModel_PropertyChanged;
-            nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;           
+                    
             Model.PinnedNode = nodeToPin;
             ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
             RaisePropertyChanged(nameof(PinnedNode));
