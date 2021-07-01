@@ -104,8 +104,16 @@ namespace Dynamo.ViewModels
             get { return _model.IsSelected; }
         }
 
-        private NodeModel pinNode;
-        public NodeModel PinNode
+        private NodeModel pinnedNode;
+
+        /// <summary>
+        /// NodeModel which this Note is pinned to
+        /// When using the pin to node command  
+        /// note and node become entangled so that 
+        /// if you select and move one the other one 
+        /// moves as well.
+        /// </summary>
+        public NodeModel PinnedNode
         {
             get { return _model.PinnedNode; }
         }
@@ -239,9 +247,15 @@ namespace Dynamo.ViewModels
             
             var nodeToPin = DynamoSelection.Instance.Selection
                 .OfType<NodeModel>()
-                .First();
+                .FirstOrDefault();
+            
+            if (nodeToPin == null)
+            {
+                return;
+            }
 
-            MoveNoteAbovePinNode(nodeToPin);
+
+            MoveNoteAbovePinnedNode(nodeToPin);
 
             var nodeViewModel = WorkspaceViewModel.Nodes.Where(x => x.Id == nodeToPin.GUID).FirstOrDefault();
             nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
@@ -249,37 +263,46 @@ namespace Dynamo.ViewModels
             nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;           
             Model.PinnedNode = nodeToPin;
             ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
-            RaisePropertyChanged(nameof(PinNode));
+            RaisePropertyChanged(nameof(PinnedNode));
         }
 
         private void NodeModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "State")
+            if (e.PropertyName == nameof(NodeModel.State) 
+                || e.PropertyName == nameof(NodeModel.Position))
             {
-                MoveNoteAbovePinNode(Model.PinnedNode);
-            }
-            if (e.PropertyName == "Position")
-            {
-                MoveNoteAbovePinNode(Model.PinnedNode);
+                MoveNoteAbovePinnedNode(Model.PinnedNode);
             }
         }
 
         private void NodeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "ZIndex")
+            if (e.PropertyName == nameof(NodeViewModel.ZIndex))
             {
                 var node = sender as NodeViewModel;
+                if (node == null)
+                {
+                    return;
+                }
                 ZIndex = Convert.ToInt32(node.ErrorBubble.ZIndex - 1);
             }
         }
 
         private bool CanPinToNode(object parameters)
         {
-                var nodeToPin = DynamoSelection.Instance.Selection
+            // Go over all elements selected and get the first NodeModel,
+            // If there is no nodeModel or there is already a node pinned
+            // Note cannot be pinned to any node
+
+            var nodeToPin = DynamoSelection.Instance.Selection
                     .OfType<NodeModel>()
-                    .First();
-                if (nodeToPin == null && Model.PinnedNode != null)
-                    return false;
+                    .FirstOrDefault();
+            
+            if (nodeToPin == null && Model.PinnedNode != null)
+                {
+                return false;
+                }
+                    
                 return true;
         }
 
@@ -291,10 +314,10 @@ namespace Dynamo.ViewModels
             nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
             nodeViewModel.NodeModel.PropertyChanged -= NodeModel_PropertyChanged;
             Model.PinnedNode = null;
-            RaisePropertyChanged(nameof(PinNode));
+            RaisePropertyChanged(nameof(PinnedNode));
         }
 
-        private void MoveNoteAbovePinNode(NodeModel nodeToPin)
+        private void MoveNoteAbovePinnedNode(NodeModel nodeToPin)
         {
             var distanceToNode = DISTANCE_TO_PINNED_NODE;
             if (nodeToPin.State == ElementState.Error ||
@@ -310,7 +333,7 @@ namespace Dynamo.ViewModels
         private void NodeViewModel_RequestsSelection(object sender, EventArgs e)
         {
 
-            if (!(sender is NodeViewModel node) || node.Id != PinNode.GUID)
+            if (!(sender is NodeViewModel node) || node.Id != PinnedNode.GUID)
             {
                 return;
             }
@@ -318,7 +341,7 @@ namespace Dynamo.ViewModels
             DynamoSelection.Instance.Selection.AddUnique(Model);
         }
 
-        internal void SelectNoteAndPinNode()
+        internal void SelectNoteAndPinnedNode()
         {
             System.Guid noteGuid = Model.GUID;
             if (Model.PinnedNode == null)

@@ -78,7 +78,7 @@ namespace Dynamo.Nodes
 
         void OnNoteTextPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            ViewModel.SelectNoteAndPinNode();
+            ViewModel.SelectNoteAndPinnedNode();
             BringToFront();
            
         }
