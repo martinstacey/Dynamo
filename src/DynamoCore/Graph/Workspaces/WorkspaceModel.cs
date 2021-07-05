@@ -91,6 +91,7 @@ namespace Dynamo.Graph.Workspaces
         public double FontSize;
         public string Background;
         public string Id;
+        public string PinnedNode;
 
         // TODO, Determine if these are required
         public double Left;
@@ -2119,6 +2120,9 @@ namespace Dynamo.Graph.Workspaces
                     annotationViewInfo.Top, 
                     text, 
                     annotationGuidValue);
+
+                noteModel.PinnedNode = this.Nodes.
+                    FirstOrDefault(x => x.GUID.ToString("N") == annotationViewInfo.PinnedNode);
 
                 //if this note does not exist, add it to the workspace.
                 var matchingNote = this.Notes.FirstOrDefault(x => x.GUID == noteModel.GUID);

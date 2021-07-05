@@ -125,6 +125,16 @@ namespace Dynamo.ViewModels
             model.PropertyChanged += note_PropertyChanged;
             DynamoSelection.Instance.Selection.CollectionChanged += SelectionOnCollectionChanged;
             ZIndex = ++StaticZIndex; // places the note on top of all nodes/notes
+
+            if (Model.PinnedNode != null)
+            {
+                var nodeViewModel = WorkspaceViewModel.Nodes
+                    .Where(x => x.Id == Model.PinnedNode.GUID)
+                    .FirstOrDefault();
+                nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
+                nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;
+            }
+
         }
 
         public override void Dispose()
