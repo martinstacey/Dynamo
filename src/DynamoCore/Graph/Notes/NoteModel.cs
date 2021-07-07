@@ -57,12 +57,13 @@ namespace Dynamo.Graph.Notes
         /// <param name="y">Y coordinate of note.</param>
         /// <param name="text">Text of note</param>
         /// <param name="guid">Unique id of note</param>
-        public NoteModel(double x, double y, string text, Guid guid)
+        public NoteModel(double x, double y, string text, Guid guid, NodeModel pinnedNode = null)
         {
             X = x;
             Y = y;
             Text = text;
             GUID = guid;
+            PinnedNode = pinnedNode;
         }
 
         #region Command Framework Supporting Methods

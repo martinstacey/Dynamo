@@ -2115,14 +2115,15 @@ namespace Dynamo.Graph.Workspaces
                 var annotationGuidValue = IdToGuidConverter(annotationViewInfo.Id);
                 var text = annotationViewInfo.Title;
 
+                var pinnedNode = this.Nodes.
+                    FirstOrDefault(x => x.GUID.ToString("N") == annotationViewInfo.PinnedNode);
+
                 var noteModel = new NoteModel(
                     annotationViewInfo.Left, 
                     annotationViewInfo.Top, 
                     text, 
-                    annotationGuidValue);
-
-                noteModel.PinnedNode = this.Nodes.
-                    FirstOrDefault(x => x.GUID.ToString("N") == annotationViewInfo.PinnedNode);
+                    annotationGuidValue,
+                    pinnedNode);
 
                 //if this note does not exist, add it to the workspace.
                 var matchingNote = this.Notes.FirstOrDefault(x => x.GUID == noteModel.GUID);

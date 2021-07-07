@@ -54,7 +54,10 @@ namespace Dynamo.Wpf.ViewModels.Core.Converters
                 convertedNote.X = note.Left;
                 convertedNote.Y = note.Top;
                 convertedNote.AnnotationText = note.Text;
-                convertedNote.PinnedNode = note.PinnedNode;
+                if (note.PinnedNode != null)
+                {
+                    convertedNote.PinnedNode = note.PinnedNode.NodeModel;
+                }
 
                 serializer.Serialize(writer, new AnnotationViewModel(workspaceView, convertedNote));
             }

@@ -105,15 +105,25 @@ namespace Dynamo.ViewModels
         }
 
         /// <summary>
-        /// NodeModel which this Note is pinned to
+        /// NodeViewModel which this Note is pinned to
         /// When using the pin to node command  
         /// note and node become entangled so that 
         /// if you select and move one the other one 
         /// moves as well.
         /// </summary>
-        public NodeModel PinnedNode
+        public NodeViewModel PinnedNode
         {
-            get { return _model.PinnedNode; }
+            get 
+            {
+                if (Model.PinnedNode==null)
+                {
+                    return null;
+                }
+
+                return WorkspaceViewModel.Nodes
+                    .Where(x => x.Id == Model.PinnedNode.GUID)
+                    .FirstOrDefault();
+            }
         }
 
         #endregion
@@ -128,17 +138,16 @@ namespace Dynamo.ViewModels
 
             if (Model.PinnedNode != null)
             {
-                var nodeViewModel = WorkspaceViewModel.Nodes
-                    .Where(x => x.Id == Model.PinnedNode.GUID)
-                    .FirstOrDefault();
-                nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
-                nodeViewModel.NodeModel.PropertyChanged += NodeModel_PropertyChanged;
+                SubscribeToPinnedNode();
             }
-
         }
 
         public override void Dispose()
         {
+            if (Model.PinnedNode != null)
+            {
+                UnsuscribeFromPinnedNode();
+            }
             _model.PropertyChanged -= note_PropertyChanged;
             DynamoSelection.Instance.Selection.CollectionChanged -= SelectionOnCollectionChanged;
         }
@@ -188,6 +197,7 @@ namespace Dynamo.ViewModels
                     RaisePropertyChanged("IsSelected");
                     break;
                 case nameof(NoteModel.PinnedNode):
+                    RaisePropertyChanged(nameof(this.PinnedNode));
                     PinToNodeCommand.RaiseCanExecuteChanged();
                     break;
 
@@ -266,42 +276,16 @@ namespace Dynamo.ViewModels
                 return;
             }
 
-
-            MoveNoteAbovePinnedNode(nodeToPin);
-            nodeToPin.PropertyChanged += NodeModel_PropertyChanged;
-
-            var nodeViewModel = WorkspaceViewModel.Nodes
-                .Where(x => x.Id == nodeToPin.GUID)
-                .FirstOrDefault();
-
-            nodeViewModel.RequestsSelection += NodeViewModel_RequestsSelection;
-            nodeViewModel.PropertyChanged += NodeViewModel_PropertyChanged;
-                    
             Model.PinnedNode = nodeToPin;
-            ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
-            RaisePropertyChanged(nameof(PinnedNode));
-        }
 
-        private void NodeModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(NodeModel.State) 
-                || e.PropertyName == nameof(NodeModel.Position))
-            {
-                MoveNoteAbovePinnedNode(Model.PinnedNode);
-            }
-        }
+            MoveNoteAbovePinnedNode();
 
-        private void NodeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(NodeViewModel.ZIndex))
-            {
-                var node = sender as NodeViewModel;
-                if (node == null)
-                {
-                    return;
-                }
-                ZIndex = Convert.ToInt32(node.ErrorBubble.ZIndex - 1);
-            }
+            SubscribeToPinnedNode();
+
+            //RaisePropertyChanged(nameof(PinnedNode));
+
+            //ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
+            //RaisePropertyChanged(nameof(PinnedNode));
         }
 
         private bool CanPinToNode(object parameters)
@@ -324,32 +308,64 @@ namespace Dynamo.ViewModels
 
         private void UnpinFromNode(object parameters)
         {
-            var nodeViewModel = WorkspaceViewModel.Nodes
-                .Where(x => x.Id == Model.PinnedNode.GUID)
-                .FirstOrDefault();
-            nodeViewModel.RequestsSelection -= NodeViewModel_RequestsSelection;
-            nodeViewModel.NodeModel.PropertyChanged -= NodeModel_PropertyChanged;
+            UnsuscribeFromPinnedNode();
             Model.PinnedNode = null;
-            RaisePropertyChanged(nameof(PinnedNode));
         }
 
-        private void MoveNoteAbovePinnedNode(NodeModel nodeToPin)
+        private void SubscribeToPinnedNode()
         {
-            var distanceToNode = DISTANCE_TO_PINNED_NODE;
-            if (nodeToPin.State == ElementState.Error ||
-                nodeToPin.State == ElementState.Warning)
+            // Subscribe to PinnedNode (model and viewmodel) Property_Changed
+            // so that note moves above and behind node every time
+            // NodeModel.State, NodeModel.Position, or NodeViewModel.ZIndex change
+            Model.PinnedNode.PropertyChanged += PinnedNodeModel_PropertyChanged;
+            PinnedNode.PropertyChanged += PinnedNodeViewModel_PropertyChanged;
+
+            // Subscribe to pinnedNode.RequestSelection (fires before node is selected)
+            // so that this note is added to the selection
+            PinnedNode.RequestsSelection += PinnedNodeViewModel_RequestsSelection;
+        }
+
+        private void UnsuscribeFromPinnedNode()
+        {
+            Model.PinnedNode.PropertyChanged -= PinnedNodeModel_PropertyChanged;
+            if (PinnedNode != null)
             {
-                distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
+                PinnedNode.PropertyChanged -= PinnedNodeViewModel_PropertyChanged;
+                PinnedNode.RequestsSelection -= PinnedNodeViewModel_RequestsSelection;
             }
-            Model.CenterX = nodeToPin.CenterX;
-            Model.CenterY = nodeToPin.CenterY - (nodeToPin.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
         }
 
+        private void PinnedNodeModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(NodeModel.State)
+                || e.PropertyName == nameof(NodeModel.Position))
+            {
+                var node = sender as NodeViewModel;
+                if (node == null)
+                {
+                    return;
+                }
+                MoveNoteAbovePinnedNode();
+            }
+        }
 
-        private void NodeViewModel_RequestsSelection(object sender, EventArgs e)
+        private void PinnedNodeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ZIndex))
+            {
+                var node = sender as NodeViewModel;
+                if (node == null)
+                {
+                    return;
+                }
+                MoveNoteAbovePinnedNode();
+            }
+        }
+
+        private void PinnedNodeViewModel_RequestsSelection(object sender, EventArgs e)
         {
 
-            if (!(sender is NodeViewModel node) || node.Id != PinnedNode.GUID)
+            if (!(sender is NodeViewModel node) || node.Id != Model.PinnedNode.GUID)
             {
                 return;
             }
@@ -372,6 +388,20 @@ namespace Dynamo.ViewModels
                 WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
                     new DynCmd.SelectModelCommand(selectionGuids, Keyboard.Modifiers.AsDynamoType()));
             }
+        }
+
+        private void MoveNoteAbovePinnedNode()
+        {
+            var distanceToNode = DISTANCE_TO_PINNED_NODE;
+            if (Model.PinnedNode.State == ElementState.Error ||
+                Model.PinnedNode.State == ElementState.Warning)
+            {
+                distanceToNode = DISTANCE_TO_PINNED_NODE_WITH_WARNING;
+            }
+            Model.CenterX = Model.PinnedNode.CenterX;
+            Model.CenterY = Model.PinnedNode.CenterY - (Model.PinnedNode.Height * 0.5) - (Model.Height * 0.5) - distanceToNode;
+
+            ZIndex = Convert.ToInt32(PinnedNode.ErrorBubble.ZIndex - 1);
         }
     }
 }
