@@ -57,7 +57,7 @@ namespace Dynamo.Graph.Notes
         /// <param name="y">Y coordinate of note.</param>
         /// <param name="text">Text of note</param>
         /// <param name="guid">Unique id of note</param>
-        public NoteModel(double x, double y, string text, Guid guid, NodeModel pinnedNode = null)
+        public NoteModel(double x, double y, string text, Guid guid)
         {
             X = x;
             Y = y;
@@ -65,6 +65,24 @@ namespace Dynamo.Graph.Notes
             GUID = guid;
             PinnedNode = pinnedNode;
         }
+
+        /// <summary>
+        /// Creates NoteModel with a reference to a pinned node.
+        /// </summary>
+        /// <param name="x">X coordinate of note.</param>
+        /// <param name="y">Y coordinate of note.</param>
+        /// <param name="text">Text of note</param>
+        /// <param name="guid">Unique id of note</param>
+        /// <param name="pinnedNode">Pinned NodeModel</param>
+        public NoteModel(double x, double y, string text, Guid guid, NodeModel pinnedNode)
+        {
+            X = x;
+            Y = y;
+            Text = text;
+            GUID = guid;
+            PinnedNode = pinnedNode;
+        }
+
 
         #region Command Framework Supporting Methods
 

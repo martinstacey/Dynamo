@@ -282,10 +282,6 @@ namespace Dynamo.ViewModels
 
             SubscribeToPinnedNode();
 
-            //RaisePropertyChanged(nameof(PinnedNode));
-
-            //ZIndex = Convert.ToInt32(nodeViewModel.ErrorBubble.ZIndex - 1);
-            //RaisePropertyChanged(nameof(PinnedNode));
         }
 
         private bool CanPinToNode(object parameters)
