@@ -362,7 +362,9 @@ namespace Dynamo.ViewModels
         private void PinnedNodeViewModel_RequestsSelection(object sender, EventArgs e)
         {
 
-            if (!(sender is NodeViewModel node) || node.Id != Model.PinnedNode.GUID)
+            if (!(sender is NodeViewModel node)
+                || Model.PinnedNode == null
+                || node.Id != Model.PinnedNode.GUID)
             {
                 return;
             }
