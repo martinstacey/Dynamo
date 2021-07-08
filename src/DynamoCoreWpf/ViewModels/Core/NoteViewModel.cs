@@ -45,8 +45,8 @@ namespace Dynamo.ViewModels
         public NoteModel Model
         {
             get { return _model; }
-            set 
-            { 
+            set
+            {
                 _model = value;
                 RaisePropertyChanged("Model");
             }
@@ -85,7 +85,7 @@ namespace Dynamo.ViewModels
         /// </summary>
         [JsonIgnore]
         public int ZIndex
-         {
+        {
 
             get { return zIndex; }
             set { zIndex = value; RaisePropertyChanged("ZIndex"); }
@@ -113,7 +113,7 @@ namespace Dynamo.ViewModels
         /// </summary>
         public NodeViewModel PinnedNode
         {
-            get 
+            get
             {
                 if (Model.PinnedNode==null)
                 {
@@ -167,7 +167,7 @@ namespace Dynamo.ViewModels
 
         public void UpdateSizeFromView(double w, double h)
         {
-            this._model.SetSize(w,h);     
+            this._model.SetSize(w,h);
         }
 
         private bool CanSelect(object parameter)
@@ -266,11 +266,11 @@ namespace Dynamo.ViewModels
 
         private void PinToNode(object parameters)
         {
-            
+
             var nodeToPin = DynamoSelection.Instance.Selection
                 .OfType<NodeModel>()
                 .FirstOrDefault();
-            
+
             if (nodeToPin == null)
             {
                 return;
@@ -293,13 +293,13 @@ namespace Dynamo.ViewModels
             var nodeToPin = DynamoSelection.Instance.Selection
                     .OfType<NodeModel>()
                     .FirstOrDefault();
-            
+
             if (nodeToPin == null || Model.PinnedNode != null)
-                {
+            {
                 return false;
-                }
-                    
-                return true;
+            }
+
+            return true;
         }
 
         private void UnpinFromNode(object parameters)
@@ -337,7 +337,7 @@ namespace Dynamo.ViewModels
             if (e.PropertyName == nameof(NodeModel.State)
                 || e.PropertyName == nameof(NodeModel.Position))
             {
-                var node = sender as NodeViewModel;
+                var node = sender as NodeModel;
                 if (node == null)
                 {
                     return;
