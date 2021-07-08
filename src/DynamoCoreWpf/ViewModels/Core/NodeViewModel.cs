@@ -614,6 +614,12 @@ namespace Dynamo.ViewModels
             }
         }
 
+        public event EventHandler Selected;
+        public void OnSelected(object sender, EventArgs e)
+        {
+            Selected?.Invoke(this, e);
+        }
+
         #endregion
 
         #region constructors

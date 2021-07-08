@@ -322,7 +322,8 @@ namespace Dynamo.ViewModels
 
             // Subscribe to pinnedNode.RequestSelection (fires before node is selected)
             // so that this note is added to the selection
-            PinnedNode.RequestsSelection += PinnedNodeViewModel_RequestsSelection;
+            //PinnedNode.RequestsSelection += PinnedNodeViewModel_RequestsSelection;
+            PinnedNode.Selected += PinnedNodeViewModel_RequestsSelection;
         }
 
         private void UnsuscribeFromPinnedNode()

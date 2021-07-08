@@ -406,7 +406,7 @@ namespace Dynamo.Controls
         {
             if (ViewModel == null || Keyboard.Modifiers == System.Windows.Input.ModifierKeys.Control) return;
 
-            ViewModel.OnRequestsSelection(this, e);
+            //ViewModel.OnRequestsSelection(this, e);
 
             var view = WpfUtilities.FindUpVisualTree<DynamoView>(this);
             ViewModel.DynamoViewModel.OnRequestReturnFocusToView();
@@ -415,6 +415,9 @@ namespace Dynamo.Controls
             Guid nodeGuid = ViewModel.NodeModel.GUID;
             ViewModel.DynamoViewModel.ExecuteCommand(
                 new DynCmd.SelectModelCommand(nodeGuid, Keyboard.Modifiers.AsDynamoType()));
+
+            viewModel.OnSelected(this, EventArgs.Empty);
+
             if (e.ClickCount == 2)
             {
                 if (ViewModel.GotoWorkspaceCommand.CanExecute(null))
