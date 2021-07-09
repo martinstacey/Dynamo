@@ -134,7 +134,7 @@ namespace Dynamo.Wpf.ViewModels.Core.Converters
             writer.WriteValue(anno.Background != null ? anno.Background : "");            
             if (anno.PinnedNode != null)
             {
-                writer.WritePropertyName("PinnedNode");
+                writer.WritePropertyName(nameof(anno.PinnedNode));
                 writer.WriteValue(anno.PinnedNode.GUID.ToString("N"));
             }
             writer.WriteEndObject();

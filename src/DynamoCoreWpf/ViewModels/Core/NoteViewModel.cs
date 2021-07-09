@@ -318,8 +318,7 @@ namespace Dynamo.ViewModels
 
             // Subscribe to pinnedNode.RequestSelection (fires before node is selected)
             // so that this note is added to the selection
-            //PinnedNode.RequestsSelection += PinnedNodeViewModel_RequestsSelection;
-            PinnedNode.Selected += PinnedNodeViewModel_RequestsSelection;
+            PinnedNode.Selected += PinnedNodeViewModel_OnPinnedNodeSelected;
         }
 
         private void UnsuscribeFromPinnedNode()
@@ -328,7 +327,7 @@ namespace Dynamo.ViewModels
             if (PinnedNode != null)
             {
                 PinnedNode.PropertyChanged -= PinnedNodeViewModel_PropertyChanged;
-                PinnedNode.RequestsSelection -= PinnedNodeViewModel_RequestsSelection;
+                PinnedNode.RequestsSelection -= PinnedNodeViewModel_OnPinnedNodeSelected;
             }
         }
 
@@ -337,11 +336,6 @@ namespace Dynamo.ViewModels
             if (e.PropertyName == nameof(NodeModel.State)
                 || e.PropertyName == nameof(NodeModel.Position))
             {
-                var node = sender as NodeModel;
-                if (node == null)
-                {
-                    return;
-                }
                 MoveNoteAbovePinnedNode();
             }
         }
@@ -350,16 +344,11 @@ namespace Dynamo.ViewModels
         {
             if (e.PropertyName == nameof(ZIndex))
             {
-                var node = sender as NodeViewModel;
-                if (node == null)
-                {
-                    return;
-                }
                 MoveNoteAbovePinnedNode();
             }
         }
 
-        private void PinnedNodeViewModel_RequestsSelection(object sender, EventArgs e)
+        private void PinnedNodeViewModel_OnPinnedNodeSelected(object sender, EventArgs e)
         {
 
             if (!(sender is NodeViewModel node)
