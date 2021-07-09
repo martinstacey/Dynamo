@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Dynamo.Configuration;
+using Dynamo.Graph.Notes;
 using Dynamo.Selection;
 using Dynamo.UI;
 using Dynamo.UI.Prompts;
@@ -75,9 +78,7 @@ namespace Dynamo.Nodes
 
         void OnNoteTextPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            System.Guid noteGuid = this.ViewModel.Model.GUID;
-            ViewModel.WorkspaceViewModel.DynamoViewModel.ExecuteCommand(
-                new DynCmd.SelectModelCommand(noteGuid, Keyboard.Modifiers.AsDynamoType()));
+            ViewModel.SelectNoteAndPinnedNode();
             BringToFront();
            
         }
@@ -152,5 +153,5 @@ namespace Dynamo.Nodes
                 child.ViewModel.ZIndex = Configurations.NodeStartZIndex;
             }
         }
-   }
+    }
 }

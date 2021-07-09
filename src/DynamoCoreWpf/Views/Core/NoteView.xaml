@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:p="clr-namespace:Dynamo.Wpf.Properties"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
+             xmlns:controls="clr-namespace:Dynamo.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200" 
              MinWidth="50"
@@ -12,6 +13,12 @@
              Canvas.Left="{Binding Left, Mode=TwoWay}" 
              Canvas.Top="{Binding Top, Mode=TwoWay}" 
              MouseDown="OnNoteMouseDown" >
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <controls:NullToVisibiltyConverter x:Key="nullToVisibiltyConverter"  />
+        </ResourceDictionary>
+    </UserControl.Resources>
     
     <Grid Name="BaseGrid">
         <Grid.ContextMenu>
@@ -27,6 +34,10 @@
                 <MenuItem Name="unGroup_cm"
                           Header="{x:Static p:Resources.ContextUnGroupFromSelection}"
                           Command="{Binding Path=UngroupCommand}" />
+                <MenuItem Name="pinToNode"
+                          Header="{x:Static p:Resources.ContextPinToNode}" 
+                          Command="{Binding Path=PinToNodeCommand}"/>
+
             </ContextMenu>
         </Grid.ContextMenu>
         <Canvas Background="{x:Null}">
@@ -77,5 +88,20 @@
             Foreground="#222"
             Padding="10" TextWrapping="Wrap" >
         </TextBlock>
+        <Button
+            Name="pinButton"
+            Background="{x:Null}"
+            BorderThickness="0"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Bottom"
+            Margin="2"
+            Command="{Binding Path=UnpinFromNodeCommand}"
+            Visibility="{Binding Path=PinnedNode, Converter={StaticResource nullToVisibiltyConverter }, UpdateSourceTrigger=PropertyChanged}"
+            >
+            <Image
+                Source="/DynamoCoreWpf;component/UI/Images/Pin_NoBackground_16px.png"
+                Width="10"
+                />
+        </Button>
     </Grid>
 </UserControl>
